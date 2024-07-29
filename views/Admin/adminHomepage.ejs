@@ -4,8 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Homepage</title>
+    <link rel="stylesheet" href="/stylesheets/admin/adminHomepage.css">
 </head>
 <body>
-    <h1>Welcome Admin</h1>
+    <%- include('adminPartials/adminNavbar') %>
+    <h1>Admin Homepage</h1>
+    <hr>
+    <div class="posts-container">
+        <% posts = posts.reverse(); %>
+        <% posts.forEach(element => { %>
+            <% const owner = users.find(user => user._id.toString() === element.owner.toString()); %>
+            <div class="card">
+                <div class="card-header">
+                    <% if (owner) { %>
+                        <div class="user-info">
+                            <p><b>USER: <%= owner.username %></b></p>
+                            <p><b>ID: <%= owner._id %></b></p>
+                        </div>
+                    <% } else { %>
+                        <p><b>USER: Unknown</b></p>
+                    <% } %>
+                </div>
+                <div class="card-body">
+                    <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                    <p><%= element.description %></p>
+                </div>
+            </div>
+        <% }); %>
+    </div>
 </body>
 </html>
+

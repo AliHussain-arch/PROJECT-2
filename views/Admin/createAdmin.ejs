@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Admin</title>
+    <link rel="stylesheet" href="/stylesheets/admin/createAdmin.css">
+</head>
+<body>
+    <%- include('./adminPartials/adminNavbar')  %>
+    <h1>Creating Admin</h1>
+    <form action="/admin/create?_method=PUT" method="POST">
+        <label>User Id</label>
+        <input type="text" name="userId" id="userId">
+        <button type="submit">CREATE</button>
+    </form>
+</body>
+</html>

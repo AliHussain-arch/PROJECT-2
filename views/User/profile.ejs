@@ -9,6 +9,7 @@
     <%- include('userPartials/userNavbar') %>
     <h1>Welcome to the profile page</h1>
     <hr>
+    <% posts = posts.reverse() %>
     <% posts.forEach(element => { %>
         <div>
             <a href="/<%= id %>/profile/<%= element._id %>" style="text-decoration: none; color: inherit;">

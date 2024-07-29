@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User</title>
+    <link rel="stylesheet" href="/stylesheets/admin/deleteUser.css">
+</head>
+<body>
+    <%- include('./adminPartials/adminNavbar')  %>
+    <h1>Delete User</h1>
+    <form action="/admin/delete?_method=DELETE" method="POST">
+        <label>User Id</label>
+        <input type="text" name="userId" id="userId">
+        <button type="submit">DELETE</button>
+    </form>
+</body>
+</html>

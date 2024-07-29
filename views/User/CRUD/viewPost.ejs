@@ -4,22 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viewing post</title>
+    <link rel="stylesheet" href="/stylesheets/user/viewPost.css">
 </head>
 <body>
     <%- include('../userPartials/userNavbar') %>
-    <h1>Viewing a post</h1>
-    <div>
+    <div class="post-details">
+        <h1>Edit the description</h1>
         <p><b>Posted on: <%= String(post.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
     </div>
-    <h2>Edit description :</h2>
-    <form action="/<%= id %>/profile/<%= post._id %>?_method=PUT" method="POST">
-        <textarea name="description" id="description"><%= post.description %></textarea>
-        <div>
-        <button type="submit">SUBMIT</button>
-        </div>
+    <form action="/<%= id %>/profile/<%= post._id %>?_method=PUT" method="POST" class="form-container">
+        <textarea name="description" id="description" class="textarea"><%= post.description %></textarea>
+        <button type="submit" class="submit-button">EDIT</button>
     </form>
-    <form action="/<%= id %>/profile/<%= post._id %>?_method=DELETE" method="POST">
-        <button type="submit">DELETE POST</button>
+    <form action="/<%= id %>/profile/<%= post._id %>?_method=DELETE" method="POST" class="form-container">
+        <button type="submit" class="delete-button">DELETE POST</button>
     </form>
 </body>
 </html>

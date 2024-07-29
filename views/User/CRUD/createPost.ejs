@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create post</title>
+    <title>Create Post</title>
+    <link rel="stylesheet" href="/stylesheets/user/createPost.css">
 </head>
 <body>
     <%- include('../userPartials/userNavbar') %>
-    <h1>CREATE</h1>
-    <form action="/<%= id %>/profile" method="POST">
-        <label for="image">Image</label>
-        <input type="text" name="image" id="image">
-        <label for="description">Description</label>
-        <textarea name="description" id="description"></textarea>
-        <button type="submit">SUBMIT</button>
+    <h1>CREATE A POST</h1>
+    <form action="/<%= id %>/profile" method="POST" class="form-container" enctype="multipart/form-data">
+            <label for="image">Image</label>
+            <input type="file" name="image" id="image" accept=".jpeg, .jpg">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" required></textarea>
+            <button type="submit">CREATE</button>      
     </form>
 </body>
 </html>

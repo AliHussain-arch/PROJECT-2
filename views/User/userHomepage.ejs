@@ -8,5 +8,25 @@
 <body>
     <%- include('userPartials/userNavbar') %>
     <h1>Welcome User</h1>
+    <hr>
+    <% if (posts.length === 0) { %>
+        <p>No posts to show.</p>
+    <% } else { %>
+        <% posts = posts.reverse() %>
+        <% posts.forEach(element => { %>
+            <% const owner = users.find(user => user._id.toString() === element.owner.toString()); %>
+            <div>
+                <% if (owner) { %>
+                    <p><b>USER: <%= owner.username %></b></p> 
+                <% } else { %>
+                    <p><b>USER: Unknown</b></p>
+                <% } %>
+                <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                <p><%= element.description %></p>
+            </div>
+            <hr>
+        <% }); %>
+    <% } %>
 </body>
 </html>
+
