@@ -186,7 +186,7 @@ app.get('/:id/profile', async (req,res) => {
 // creating a post
 app.post('/:id/profile',async (req,res) => {
     const id = req.params.id;
-    console.log(req.body.description);
+    console.log(req.body)
     await Post.create({
         owner : id,
         description : req.body.description

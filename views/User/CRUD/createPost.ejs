@@ -9,7 +9,7 @@
 <body>
     <%- include('../userPartials/userNavbar') %>
     <h1>CREATE A POST</h1>
-    <form action="/<%= id %>/profile" method="POST" class="form-container" enctype="multipart/form-data">
+    <form action="/<%= id %>/profile" method="POST" class="form-container">
             <label for="image">Image</label>
             <input type="file" name="image" id="image" accept=".jpeg, .jpg">
             <label for="description">Description</label>
