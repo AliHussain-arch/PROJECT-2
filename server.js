@@ -26,23 +26,40 @@ app.use(methodOverride('_method'));
 app.use(express.static('public'));
 
 // requiring and setting express-session middleware and session middleware
+const MongoStore = require("connect-mongo");
 const session = require('express-session');
 app.use(
     session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: true,
-}));
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: true,
+      store: MongoStore.create({
+        mongoUrl: process.env.mongoDB_URI,
+      }),
+    })
+  );
+  const passUserToView = require("./middleware/pass-user-to-view.js");
+  app.use(passUserToView);
+  const isSignedIn = require('./middleware/is-signed-in.js');
 
 //requiring and setting morgan middleware
 const morgan = require('morgan');
 app.use(morgan('dev'));
 
-
+//functions fisher-yates shuffle
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
 
 // Homepage
-app.get('/',(req,res)=>{
-    res.render('Index');
+app.get('/',async (req,res)=>{
+    const posts = shuffleArray(await Post.find());
+    const users = await User.find();
+    res.render('Index', {posts, users});
 })
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,10 +85,21 @@ app.post('/auth/signin',async (req,res)=>{
         return res.send('Invalid Input')
     }
     if(user.isAdmin){
-        return res.redirect(`/admin`);
+        req.session.user = {
+            username: user.username,
+          };
+          req.session.save(() => {
+            return res.redirect(`/admin`);
+          });
     }
     else{
+        req.session.user = {
+            username: user.username,
+          };
+        req.session.save(() => {
         return res.redirect(`/${user.id}`);
+        });
+        
     }
     
 });
@@ -105,10 +133,14 @@ app.post('/auth/signup',async (req,res)=>{
 })
 // signout
 app.get('/auth/signout', (req, res, next) => {
-    res.send('signing out')
+    req.session.destroy(() => {
+        res.redirect("/");
+      });
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.use(isSignedIn);
 
 //Admin routes
 //Admin homepage

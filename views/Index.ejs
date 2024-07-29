@@ -4,9 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOMEPAGE</title>
+    <link rel="stylesheet" href="/stylesheets/IndexStylesheet.css">
 </head>
 <body>
     <%- include('./partials/navbar')  %>
-    <h1>THE HOMEPAGE</h1>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Our Community</h1>
+            <p>Join us today and become a part of our community. Sign up now and start connecting with others!</p>
+            <a href="/auth/signup" class="btn">Sign Up</a>
+        </div>
+    </div>
+    <hr>
+    <div class="posts-container">
+        <% if (posts.length === 0) { %>
+            <p class="no-posts">No posts to show.</p>
+        <% } else { %>
+            <% posts = posts.reverse() %>
+            <% posts.forEach(element => { %>
+                <div class="post-card">
+                    <img src="/Images/placeholder.jpg" alt="Placeholder Image" class="post-image">
+                    <% const owner = users.find(user => user._id.toString() === element.owner.toString()); %>
+                    <div class="post-content">
+                        <% if (owner) { %>
+                            <p><b>USER: <%= owner.username %></b></p> 
+                        <% } else { %>
+                            <p><b>USER: Unknown</b></p>
+                        <% } %>
+                        <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                        <p><%= element.description %></p>
+                    </div>
+                </div>
+                <hr class="post-divider">
+            <% }); %>
+        <% } %>
+    </div>
 </body>
 </html>

@@ -7,14 +7,14 @@ body {
 }
 
 nav {
-    background-color: #333;
-    color: #fff;
+    background-color: #fff;
+    color: #000;
     padding: 10px;
     text-align: center;
 }
 
 nav a {
-    color: #fff;
+    color: hsl(0, 0%, 2%);
     text-decoration: none;
     margin: 0 15px;
     font-weight: bold;

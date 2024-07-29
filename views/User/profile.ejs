@@ -4,21 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link rel="stylesheet" href="/stylesheets/user/profile.css">
 </head>
 <body>
     <%- include('userPartials/userNavbar') %>
     <h1>Welcome to the profile page</h1>
     <hr>
     <% posts = posts.reverse() %>
-    <% posts.forEach(element => { %>
-        <div>
-            <a href="/<%= id %>/profile/<%= element._id %>" style="text-decoration: none; color: inherit;">
-                <p><b>USER: <%=owner%></b></p> 
-                <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
-                <p><%= element.description %></p>
-            </a>
-        </div>
-        <hr>
-    <% }); %>
+    <div class="posts-container">
+        <% posts.forEach(element => { %>
+            <div class="post-card">
+                <img src="/Images/placeholder.jpg" alt="Placeholder Image" class="post-image">
+                <div class="post-content">
+                    <a href="/<%= id %>/profile/<%= element._id %>" class="post-link">
+                        <p><b>USER: <%= owner %></b></p>
+                        <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                        <p><%= element.description %></p>
+                    </a>
+                </div>
+            </div>
+        <% }); %>
+    </div>
 </body>
 </html>
