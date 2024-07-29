@@ -8,5 +8,16 @@
 <body>
     <%- include('userPartials/userNavbar') %>
     <h1>Welcome to the profile page</h1>
+    <hr>
+    <% posts.forEach(element => { %>
+        <div>
+            <a href="/<%= id %>/profile/<%= element._id %>" style="text-decoration: none; color: inherit;">
+                <p><b>USER: <%=owner%></b></p> 
+                <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                <p><%= element.description %></p>
+            </a>
+        </div>
+        <hr>
+    <% }); %>
 </body>
 </html>

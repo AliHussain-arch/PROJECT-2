@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewing post</title>
+</head>
+<body>
+    <%- include('../userPartials/userNavbar') %>
+    <h1>Viewing a post</h1>
+    <div>
+        <p><b>Posted on: <%= String(post.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+    </div>
+    <h2>Edit description :</h2>
+    <form action="/<%= id %>/profile/<%= post._id %>?_method=PUT" method="POST">
+        <textarea name="description" id="description"><%= post.description %></textarea>
+        <div>
+        <button type="submit">SUBMIT</button>
+        </div>
+    </form>
+    <form action="/<%= id %>/profile/<%= post._id %>?_method=DELETE" method="POST">
+        <button type="submit">DELETE POST</button>
+    </form>
+</body>
+</html>

@@ -18,6 +18,10 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// requiring and setting method override middleware
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
 // requiring and setting express-session middleware and session middleware
 const session = require('express-session');
 app.use(
@@ -99,51 +103,71 @@ app.get('/admin', (req,res) => {
 //User routes
 
 // User home page
-app.get('/:id', (req,res) => {
-    const id = req.params.id
-    res.render('User/userHomepage',{id});
+app.get('/:id', async (req,res) => {
+    const id = req.params.id;
+    const posts = await Post.find();
+    res.render('User/userHomepage',{id, posts});
 });
 
-// User Index page
-app.get('/:id/profile', (req,res) => {
+// User profile page
+app.get('/:id/profile', async (req,res) => {
     const id = req.params.id
-    res.render('User/profile',{id});
+    const posts = await Post.find({owner : id});
+    const owner = (await User.findOne({_id : id})).username;
+    res.render('User/profile',{id, posts, owner});
+});
+
+// creating a post
+app.post('/:id/profile',async (req,res) => {
+    const id = req.params.id;
+    await Post.create({
+        owner : id,
+        // image :
+        description : req.body.description
+    })
+    const posts = await Post.find({owner : id});
+    const owner = (await User.findOne({_id : id})).username;
+    res.render('User/profile',{id, posts, owner});
 });
 
 // User create page
 app.get('/:id/profile/new', (req,res) => {
     const id = req.params.id
-    res.render('User/profile',{id});
-});
-
-// creating a post
-app.post('/:id/profile', (req,res) => {
-    const id = req.params.id
-    res.render('User/profile',{id});
+    res.render('User/CRUD/createPost',{id});
 });
 
 // viewing a post
-app.get('/:id/profile/:postId', (req,res) => {
+app.get('/:id/profile/:postId',async (req,res) => {
     const id = req.params.id
-    res.render('User/profile',{id});
+    const postId = req.params.postId
+    const post = await Post.findOne({_id : postId});
+    res.render('User/CRUD/viewPost', {id, post});
 });
 
-// Editing page for a post
+// Editing page for a post -- NOT BEING USED ---
 app.put('/:id/profile/:postId/edit', (req,res) => {
     const id = req.params.id
     res.render('User/profile',{id});
 });
 
 // updating a post
-app.put('/:id/profile/:postId', (req,res) => {
-    const id = req.params.id
-    res.render('User/profile',{id});
+app.put('/:id/profile/:postId',async (req,res) => {
+    const id = req.params.id;
+    const postId = req.params.postId
+    const owner = (await User.findOne({_id : id})).username;
+    const post = await Post.findByIdAndUpdate(postId, {description: req.body.description} );
+    const posts = await Post.find({owner : id});
+    res.render('User/profile',{id, posts, owner});
 });
 
 // updating a post
-app.delete('/:id/profile/:postId', (req,res) => {
-    const id = req.params.id
-    res.render('User/profile',{id});
+app.delete('/:id/profile/:postId',async (req,res) => {
+    const id = req.params.id;
+    const postId = req.params.postId;
+    const owner = (await User.findOne({_id : id})).username;
+    const post = await Post.findByIdAndDelete(postId, {description: req.body.description} );
+    const posts = await Post.find({owner : id});
+    res.render('User/profile',{id, posts, owner});
 });
 
 
