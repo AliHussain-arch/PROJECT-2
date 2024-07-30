@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #000;
+    background-color: #001f3f;
     color: #fff;
     margin: 0;
     padding: 0;
@@ -14,7 +14,7 @@ nav {
 }
 
 nav a {
-    color: hsl(0, 0%, 2%);
+    color: #000;
     text-decoration: none;
     margin: 0 15px;
     font-weight: bold;
@@ -37,6 +37,12 @@ form {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.warning {
+    color: red;
+    text-align: center;
+    margin: 10px 0;
 }
 
 form div {
@@ -79,3 +85,4 @@ button {
 button:hover {
     background-color: #45a049;
 }
+

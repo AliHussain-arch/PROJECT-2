@@ -105,25 +105,25 @@ app.post('/auth/signin',async (req,res)=>{
 });
 //Signup page
 app.get('/auth/signup',(req,res)=>{
-    res.render('auth/signup');
+    res.render('auth/signup', {empty : false, exist: false, match:false});
 })
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
 // Creating the user
 app.post('/auth/signup',async (req,res)=>{
     if(req.body.username === ''){
-        return res.send('Invalid Input')
+        return res.render('auth/signup', {empty : true, exist: false, match:false});
     }
     if(req.body.password === ''){
-        return res.send('Invalid Input')
+        return res.render('auth/signup', {empty : true, exist: false, match:false});
     }
     if(req.body.confirmPassword === ''){
-        return res.send('Invalid Input')
+        return res.render('auth/signup', {empty : true, exist: false, match:false});
     }
     if(await User.findOne({username:req.body.username})){
-        return res.send('user already exists')
+        return res.render('auth/signup', {empty : false, exist: true, match:false});
     };
     if(req.body.password !== req.body.confirmPassword){
-        return res.send('confirm password doesnt match password')
+        return res.render('auth/signup', {empty : false, exist: false, match:true});
     }
     await User.create({
         username : req.body.username,
@@ -202,10 +202,20 @@ app.delete('/admin/delete',async (req,res) => {
 // User home page
 app.get('/:id', async (req,res) => {
     const id = req.params.id;
-    const posts = await Post.find();
+    let posts = await Post.find();
+    posts = posts.filter(post => post.owner.toString() !== id)
     const users = await User.find();
     res.render('User/userHomepage',{id, posts, users});
 });
+
+//View other user
+app.get('/:id/viewUser',async (req,res) => {
+    const id = req.params.id
+    const posts = await Post.find({owner : id});
+    const owner = (await User.findOne({_id : id})).username;
+    console.log(owner);
+    res.render('User/viewUser', {id, posts, owner})
+})
 
 // User profile page
 app.get('/:id/profile', async (req,res) => {

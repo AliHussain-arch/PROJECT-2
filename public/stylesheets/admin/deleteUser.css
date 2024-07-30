@@ -1,5 +1,5 @@
 body {
-    background-color: black;
+    background-color: #001f3f;
     color: white;
     font-family: Arial, sans-serif;
     text-align: center;
@@ -8,18 +8,17 @@ body {
 }
 
 nav {
-    background-color: #333;
+    background-color: #fff;
+    color: #000;
     padding: 10px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    text-align: center;
 }
 
 nav a {
-    color: white;
+    color: #000;
     text-decoration: none;
     margin: 0 15px;
-    font-size: 16px;
+    font-weight: bold;
 }
 
 nav a:hover {
@@ -61,7 +60,7 @@ form input {
 }
 
 form button {
-    background-color: green;
+    background-color: red;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -71,5 +70,5 @@ form button {
 }
 
 form button:hover {
-    background-color: darkgreen;
+    background-color: darkred;
 }

@@ -7,13 +7,22 @@
     <link rel="stylesheet" href="/stylesheets/auth/signup.css">
 </head>
 <body>
-    <%- include('../partials/navbar')  %>
-    <h1>Signup page</h1>
+    <%- include('../partials/navbar') %>
+    <h1>JOIN OUR COMMUNITY</h1>
     <form action="" method="POST">
+        <% if (empty) { %>
+            <h4 class="warning">FILL ALL FIELDS</h4>
+        <% } %>
+        <% if (exist) { %>
+            <h4 class="warning">USER EXISTS</h4>
+        <% } %>
         <div>
             <label for="username">Username</label>
             <input type="text" name="username" id="username">
         </div>
+        <% if (match) { %>
+            <h4 class="warning">PASSWORDS DON'T MATCH</h4>
+        <% } %>
         <div>
             <label for="password">Password</label>
             <input type="password" name="password" id="password">

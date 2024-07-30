@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Homepage</title>
-    <link rel="stylesheet" href="/stylesheets/user/userHomepage.css">
+    <title>View User</title>
+    <link rel="stylesheet" href="/stylesheets/user/viewUser.css">
 </head>
 <body>
-    <%- include('userPartials/userNavbar') %>
-    <div id="hero">
-        <div class="hero-content">
-            <h1>EXPLORE POPULAR POSTS FROM THE COMMUNITY</h1>
-            <p>Discover the most engaging and popular posts from users like you!</p>
-        </div>
+    <div class="view-user-header">
+        <h1>Viewing Profile of <%= owner %></h1>
     </div>
     <div class="posts-container">
         <% if (posts.length === 0) { %>
@@ -22,13 +18,8 @@
             <% posts.forEach(element => { %>
                 <div class="post-card">
                     <img src="/Images/placeholder.jpg" alt="Placeholder Image" class="post-image">
-                    <% const owner = users.find(user => user._id.toString() === element.owner.toString()); %>
                     <div class="post-content">
-                        <% if (owner) { %>
-                            <p><b>USER: <a href="<%=owner.id%>/viewUser"><%= owner.username %></a></b></p>
-                        <% } else { %>
-                            <p><b>USER: Unknown</b></p>
-                        <% } %>
+                        <p><b>USER: <%= owner %></b></p>
                         <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
                         <p><%= element.description %></p>
                     </div>
