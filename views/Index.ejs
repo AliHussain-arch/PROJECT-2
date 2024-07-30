@@ -23,7 +23,7 @@
             <% posts = posts.reverse() %>
             <% posts.forEach(element => { %>
                 <div class="post-card">
-                    <img src="/Images/placeholder.jpg" alt="Placeholder Image" class="post-image">
+                    <img src="<%=element.image%>" alt="Placeholder Image" class="post-image">
                     <% const owner = users.find(user => user._id.toString() === element.owner.toString()); %>
                     <div class="post-content">
                         <% if (owner) { %>

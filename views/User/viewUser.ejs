@@ -17,7 +17,7 @@
             <% posts = posts.reverse() %>
             <% posts.forEach(element => { %>
                 <div class="post-card">
-                    <img src="/Images/placeholder.jpg" alt="Placeholder Image" class="post-image">
+                    <img src="<%=element.image%>" alt="Placeholder Image" class="post-image">
                     <div class="post-content">
                         <p><b>USER: <%= owner %></b></p>
                         <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>

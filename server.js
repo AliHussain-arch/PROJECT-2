@@ -1,6 +1,12 @@
 const express = require('express');
 const app = express();
 
+// requiring image needed module
+const fs = require('fs');
+const imgur = require('imgur');
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+
 // hashing module
 const bcrypt = require('bcrypt');
 
@@ -15,7 +21,7 @@ const Post = require('./models/postModel');
 
 // requiring and setting up parsing middleware
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // requiring and setting method override middleware
@@ -226,17 +232,39 @@ app.get('/:id/profile', async (req,res) => {
 });
 
 // creating a post
-app.post('/:id/profile',async (req,res) => {
+app.post('/:id/profile', async (req, res) => {
     const id = req.params.id;
-    console.log(req.body)
-    await Post.create({
-        owner : id,
-        description : req.body.description
-    })
-    const posts = await Post.find({owner : id});
-    const owner = (await User.findOne({_id : id})).username;
-    res.render('User/profile',{id, posts, owner});
+    const image = req.files.image;
+    const uploadPath = __dirname + '/upload/' + image.name;
+    
+    try {
+        await new Promise((resolve, reject) => {
+            image.mv(uploadPath, (err) => {
+                if (err) return reject(err);
+                resolve();
+            });
+        });
+
+        const urlObject = await imgur.uploadFile(uploadPath);
+        const postImage = urlObject.data.link;
+
+        fs.unlinkSync(uploadPath);
+
+        await Post.create({
+            owner: id,
+            image: postImage,
+            description: req.body.description
+        });
+
+        const posts = await Post.find({ owner: id });
+        const owner = (await User.findOne({ _id: id })).username;
+
+        res.render('User/profile', { id, posts, owner });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 });
+
 
 // User create page
 app.get('/:id/profile/new', (req,res) => {

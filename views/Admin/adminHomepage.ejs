@@ -8,29 +8,33 @@
 </head>
 <body>
     <%- include('adminPartials/adminNavbar') %>
-    <h1>Admin Homepage</h1>
-    <hr>
+    <div style="text-align: center;">
+        <h1>WELCOME ADMIN</h1>
+    </div>
     <div class="posts-container">
-        <% posts = posts.reverse(); %>
-        <% posts.forEach(element => { %>
-            <% const owner = users.find(user => user._id.toString() === element.owner.toString()); %>
-            <div class="card">
-                <div class="card-header">
-                    <% if (owner) { %>
-                        <div class="user-info">
+        <% if (posts.length === 0) { %>
+            <p class="no-posts">No posts to show.</p>
+        <% } else { %>
+            <% posts = posts.reverse() %>
+            <% posts.forEach(element => { %>
+                <div class="post-card">
+                    <img src="<%=element.image%>" alt="Placeholder Image" class="post-image">
+                    <% const owner = users.find(user => user._id.toString() === element.owner.toString()); %>
+                    <div class="post-content">
+                        <% if (owner) { %>
                             <p><b>USER: <%= owner.username %></b></p>
-                            <p><b>ID: <%= owner._id %></b></p>
-                        </div>
-                    <% } else { %>
-                        <p><b>USER: Unknown</b></p>
-                    <% } %>
+                            <p><b>USER ID: <%= owner._id %></b></p>
+                            <p><b>POST ID: <%= element._id %></b></p> 
+                        <% } else { %>
+                            <p><b>USER: Unknown</b></p>
+                        <% } %>
+                        <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                        <p><%= element.description %></p>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
-                    <p><%= element.description %></p>
-                </div>
-            </div>
-        <% }); %>
+                <hr class="post-divider">
+            <% }); %>
+        <% } %>
     </div>
 </body>
 </html>

@@ -14,7 +14,7 @@
     <div class="posts-container">
         <% posts.forEach(element => { %>
             <div class="post-card">
-                <img src="/Images/placeholder.jpg" alt="Placeholder Image" class="post-image">
+                <img src="<%=element.image%>" alt="Placeholder Image" class="post-image">
                 <div class="post-content">
                     <a href="/<%= id %>/profile/<%= element._id %>" class="post-link">
                         <p><b>USER: <%= owner %></b></p>
