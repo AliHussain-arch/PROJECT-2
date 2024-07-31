@@ -183,13 +183,12 @@ app.get('/admin/delete', (req,res) => {
     res.render('Admin/deleteUser');
 });
 
-//Delete user page
+//Deleting user 
 app.delete('/admin/delete',async (req,res) => {
     const userId = req.body.userId;
     if(req.body.userId === ''){
         return res.send('Invalid Input')
     }
-    console.log('Deleting user with ID:', userId);
     const user = await User.findByIdAndDelete(userId);
         if (user) {
             const postsToDelete = await Post.find({ owner: userId });
@@ -199,6 +198,28 @@ app.delete('/admin/delete',async (req,res) => {
             res.render('Admin/adminHomepage', { posts, users });
         } else {
             res.status(404).send('User not found.');
+        }
+});
+
+//Delete post page
+app.get('/admin/deletePost', (req,res) => {
+    res.render('Admin/deletePost');
+});
+
+//Deleting post
+app.delete('/admin/deletePost',async (req,res) => {
+    const postId = req.body.postId;
+    if(req.body.postId === ''){
+        return res.send('Invalid Input')
+    }
+    const post = await Post.findByIdAndDelete(postId);
+        if (post) {
+            const users = await User.find();
+            const posts = await Post.find();
+            res.render('Admin/adminHomepage', { posts, users });
+        } else {
+            res.send('Post not found.')
+            // res.status(404).send('Post not found.');
         }
 });
 
@@ -235,8 +256,7 @@ app.get('/:id/profile', async (req,res) => {
 app.post('/:id/profile', async (req, res) => {
     const id = req.params.id;
     const image = req.files.image;
-    const uploadPath = __dirname + '/upload/' + image.name;
-    
+    const uploadPath = __dirname + '/upload/' + image.name; 
     try {
         await new Promise((resolve, reject) => {
             image.mv(uploadPath, (err) => {
@@ -244,27 +264,21 @@ app.post('/:id/profile', async (req, res) => {
                 resolve();
             });
         });
-
         const urlObject = await imgur.uploadFile(uploadPath);
         const postImage = urlObject.data.link;
-
         fs.unlinkSync(uploadPath);
-
         await Post.create({
             owner: id,
             image: postImage,
             description: req.body.description
         });
-
         const posts = await Post.find({ owner: id });
         const owner = (await User.findOne({ _id: id })).username;
-
         res.render('User/profile', { id, posts, owner });
     } catch (err) {
         res.status(500).send(err.message);
     }
 });
-
 
 // User create page
 app.get('/:id/profile/new', (req,res) => {

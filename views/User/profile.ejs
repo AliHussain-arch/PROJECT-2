@@ -18,7 +18,7 @@
                 <div class="post-content">
                     <a href="/<%= id %>/profile/<%= element._id %>" class="post-link">
                         <p><b>USER: <%= owner %></b></p>
-                        <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                        <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b> <% if (element.createdAt.toString() !== element.updatedAt.toString()) { %><em style="color: grey; opacity: 0.7;"> (Edited)</em><% } %></p>
                         <p><%= element.description %></p>
                     </a>
                 </div>

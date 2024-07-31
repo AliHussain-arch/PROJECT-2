@@ -28,7 +28,7 @@
                         <% } else { %>
                             <p><b>USER: Unknown</b></p>
                         <% } %>
-                        <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b></p>
+                        <p><b>Posted on: <%= String(element.createdAt).split(' ').slice(1, -2).join(' ') %></b> <% if (element.createdAt.toString() !== element.updatedAt.toString()) { %><em style="color: grey; opacity: 0.7;">(Edited)</em><% } %></p>
                         <p><%= element.description %></p>
                     </div>
                 </div>
