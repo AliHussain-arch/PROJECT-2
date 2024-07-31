@@ -71,227 +71,69 @@ app.get('/',async (req,res)=>{
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Authentication
+const auth = require('./controllers/auth');
 //Signin page
-app.get('/auth/signin',(req,res)=>{
-    res.render('auth/signin');
-})
+app.get('/auth/signin', auth.signin)
 // logging in the user
-app.post('/auth/signin',async (req,res)=>{
-    const user = await User.findOne({username : req.body.username})
-    if(req.body.username === ''){
-        return res.send('Invalid Input')
-    }
-    if(req.body.password === ''){
-        return res.send('Invalid Input')
-    }
-    if(!user){
-        return res.send('Invalid Input')
-    }
-    if(! await bcrypt.compare(req.body.password , user.password)){
-        return res.send('Invalid Input')
-    }
-    if(user.isAdmin){
-        req.session.user = {
-            username: user.username,
-          };
-          req.session.save(() => {
-            return res.redirect(`/admin`);
-          });
-    }
-    else{
-        req.session.user = {
-            username: user.username,
-          };
-        req.session.save(() => {
-        return res.redirect(`/${user.id}`);
-        });
-        
-    }
-    
-});
+app.post('/auth/signin', auth.login);
 //Signup page
-app.get('/auth/signup',(req,res)=>{
-    res.render('auth/signup', {empty : false, exist: false, match:false});
-})
-const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
+app.get('/auth/signup', auth.signup)
 // Creating the user
-app.post('/auth/signup',async (req,res)=>{
-    if(req.body.username === ''){
-        return res.render('auth/signup', {empty : true, exist: false, match:false});
-    }
-    if(req.body.password === ''){
-        return res.render('auth/signup', {empty : true, exist: false, match:false});
-    }
-    if(req.body.confirmPassword === ''){
-        return res.render('auth/signup', {empty : true, exist: false, match:false});
-    }
-    if(await User.findOne({username:req.body.username})){
-        return res.render('auth/signup', {empty : false, exist: true, match:false});
-    };
-    if(req.body.password !== req.body.confirmPassword){
-        return res.render('auth/signup', {empty : false, exist: false, match:true});
-    }
-    await User.create({
-        username : req.body.username,
-        password : await bcrypt.hash(req.body.password,SALT_ROUNDS)
-    });
-    res.redirect('/auth/signin');
-})
+app.post('/auth/signup', auth.create)
 // signout
-app.get('/auth/signout', (req, res, next) => {
-    req.session.destroy(() => {
-        res.redirect("/");
-      });
-});
+app.get('/auth/signout', auth.signout);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.use(isSignedIn);
 
 //Admin routes
+
+const admin = require('./controllers/adminControllers.js');
+
 //Admin homepage
-app.get('/admin',async (req,res) => {
-    const users = await User.find();
-    const posts = await Post.find();
-    res.render('Admin/adminHomepage', {posts, users});
-});
+app.get('/admin',admin.Index);
 
 //Create admin page
-app.get('/admin/create', (req,res) => {
-    res.render('Admin/createAdmin');
-});
+app.get('/admin/create',admin.createAdminPage );
 
 //Creating admin 
-app.put('/admin/create',async (req,res) => {
-    const userId = req.body.userId;
-    if(req.body.userId === ''){
-        return res.send('Invalid Input')
-    }
-    const user = await User.findByIdAndUpdate(userId, { isAdmin: true });
-    if (user) {
-        const users = await User.find();
-        const posts = await Post.find();
-        return res.render('Admin/adminHomepage', {posts, users});
-    } else {
-        return res.status(404).send('User not found.');
-    }
-    
-});
+app.put('/admin/create',admin.creatingAdmin);
 
 //Delete user page
-app.get('/admin/delete', (req,res) => {
-    res.render('Admin/deleteUser');
-});
+app.get('/admin/delete',admin.deleteUserPage );
 
 //Deleting user 
-app.delete('/admin/delete',async (req,res) => {
-    const userId = req.body.userId;
-    if(req.body.userId === ''){
-        return res.send('Invalid Input')
-    }
-    const user = await User.findByIdAndDelete(userId);
-        if (user) {
-            const postsToDelete = await Post.find({ owner: userId });
-            const deleteResult = await Post.deleteMany({ owner: userId });
-            const users = await User.find();
-            const posts = await Post.find();
-            res.render('Admin/adminHomepage', { posts, users });
-        } else {
-            res.status(404).send('User not found.');
-        }
-});
+app.delete('/admin/delete',admin.deletingUser);
 
 //Delete post page
-app.get('/admin/deletePost', (req,res) => {
-    res.render('Admin/deletePost');
-});
+app.get('/admin/deletePost',admin.deletePostPage );
 
 //Deleting post
-app.delete('/admin/deletePost',async (req,res) => {
-    const postId = req.body.postId;
-    if(req.body.postId === ''){
-        return res.send('Invalid Input')
-    }
-    const post = await Post.findByIdAndDelete(postId);
-        if (post) {
-            const users = await User.find();
-            const posts = await Post.find();
-            res.render('Admin/adminHomepage', { posts, users });
-        } else {
-            res.status(404).send('Post not found.');
-        }
-});
+app.delete('/admin/deletePost',admin.deletingPost);
 
 
 //User routes
 
+const user = require('./controllers/userControllers.js');
+
 // User home page
-app.get('/:id', async (req,res) => {
-    const id = req.params.id;
-    let posts = await Post.find();
-    posts = posts.filter(post => post.owner.toString() !== id)
-    const users = await User.find();
-    res.render('User/userHomepage',{id, posts, users});
-});
+app.get('/:id',user.userIndex );
 
 //View other user
-app.get('/:id/viewUser',async (req,res) => {
-    const id = req.params.id
-    const posts = await Post.find({owner : id});
-    const owner = (await User.findOne({_id : id})).username;
-    console.log(owner);
-    res.render('User/viewUser', {id, posts, owner})
-})
+app.get('/:id/viewUser',user.viewUsers)
 
 // User profile page
-app.get('/:id/profile', async (req,res) => {
-    const id = req.params.id
-    const posts = await Post.find({owner : id});
-    const owner = (await User.findOne({_id : id})).username;
-    res.render('User/profile',{id, posts, owner});
-});
+app.get('/:id/profile',user.profile );
 
 // creating a post
-app.post('/:id/profile', async (req, res) => {
-    const id = req.params.id;
-    const image = req.files.image;
-    const uploadPath = __dirname + '/upload/' + image.name; 
-    try {
-        await new Promise((resolve, reject) => {
-            image.mv(uploadPath, (err) => {
-                if (err) return reject(err);
-                resolve();
-            });
-        });
-        const urlObject = await imgur.uploadFile(uploadPath);
-        const postImage = urlObject.data.link;
-        fs.unlinkSync(uploadPath);
-        await Post.create({
-            owner: id,
-            image: postImage,
-            description: req.body.description
-        });
-        const posts = await Post.find({ owner: id });
-        const owner = (await User.findOne({ _id: id })).username;
-        res.render('User/profile', { id, posts, owner });
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
+app.post('/:id/profile',user.createPost );
 
-// User create page
-app.get('/:id/profile/new', (req,res) => {
-    const id = req.params.id
-    res.render('User/CRUD/createPost',{id});
-});
+// Post create page
+app.get('/:id/profile/new',user.createPostPage );
 
 // viewing a post
-app.get('/:id/profile/:postId',async (req,res) => {
-    const id = req.params.id
-    const postId = req.params.postId
-    const post = await Post.findOne({_id : postId});
-    res.render('User/CRUD/viewPost', {id, post});
-});
+app.get('/:id/profile/:postId',user.postView);
 
 // Editing page for a post -- NOT BEING USED ---
 app.put('/:id/profile/:postId/edit', (req,res) => {
@@ -300,24 +142,10 @@ app.put('/:id/profile/:postId/edit', (req,res) => {
 });
 
 // updating a post
-app.put('/:id/profile/:postId',async (req,res) => {
-    const id = req.params.id;
-    const postId = req.params.postId
-    const owner = (await User.findOne({_id : id})).username;
-    const post = await Post.findByIdAndUpdate(postId, {description: req.body.description} );
-    const posts = await Post.find({owner : id});
-    res.render('User/profile',{id, posts, owner});
-});
+app.put('/:id/profile/:postId',user.postUpdate);
 
 // deleting a post
-app.delete('/:id/profile/:postId',async (req,res) => {
-    const id = req.params.id;
-    const postId = req.params.postId;
-    const owner = (await User.findOne({_id : id})).username;
-    const post = await Post.findByIdAndDelete(postId, {description: req.body.description} );
-    const posts = await Post.find({owner : id});
-    res.render('User/profile',{id, posts, owner});
-});
+app.delete('/:id/profile/:postId',user.postDelete);
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, ()=>console.log(`Listening on port ${PORT}`));
