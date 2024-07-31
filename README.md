@@ -12,6 +12,10 @@ The project is a social media web application built with the MEN stack (MongoDB,
 - The admin can create admin.
 
 ![Current Schema](Resources/currentSchema.png)
+![Tree Diagram](Resources/treeDiagram.png)
+
+#### Pictures of the website
+
 
 #### Pseudo code
 - Create the project repo
