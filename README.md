@@ -3,8 +3,15 @@ The project is a social media web application built with the MEN stack (MongoDB,
 #### User Story
 - The user must be able to create an account.
 - The user must be able to sign in into his account.
-- The user must be able to create and delete posts.
-- The user must be able to edit his username and email.
+- The user must be able to create, update and delete posts.
+- The user can upload images.
+- The users can view the date of upload.
+- The users can view other users account.
+- The user can see if the post got edited.
+- The community must be moderated through an admin that can delete both users and posts.
+- The admin can create admin.
+
+![Current Schema](Resources/currentSchema.png)
 
 #### Pseudo code
 - Create the project repo
@@ -24,8 +31,11 @@ The project is a social media web application built with the MEN stack (MongoDB,
 - Email editing mechanism for the user
 - Create an admin user with the ability to delete posts.
 
-#### Extra features (If time permits)
-- The user can upload images
-- The admin can delete users
+#### Extra features 
 - Like mechanism
-- The users can view the date of upload
+- The User can add profile picture
+- The User can create a bio
+- The User can follow 
+- The User can see his followers
+
+![Future Schema](Resources/futureSchema.png)
