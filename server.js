@@ -218,8 +218,7 @@ app.delete('/admin/deletePost',async (req,res) => {
             const posts = await Post.find();
             res.render('Admin/adminHomepage', { posts, users });
         } else {
-            res.send('Post not found.')
-            // res.status(404).send('Post not found.');
+            res.status(404).send('Post not found.');
         }
 });
 
