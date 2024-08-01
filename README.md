@@ -1,6 +1,6 @@
 The project is a social media web application built with the MEN stack (MongoDB, Express.js, Node.js). Users can create accounts, securely log in, post content including images, and manage their profiles and posts.
 
-#### User Story
+## User Story
 - The user must be able to create an account.
 - The user must be able to sign in into his account.
 - The user must be able to create, update and delete posts.
@@ -15,7 +15,7 @@ The project is a social media web application built with the MEN stack (MongoDB,
 ---
 ![Tree Diagram](Resources/treeDiagram.png)
 
-#### Pictures of the website
+## Pictures of the website
 ### Admin 
 ![Admin Homepage](Resources/Admin/Admin%20Homepage.png)
 ---
@@ -38,7 +38,7 @@ The project is a social media web application built with the MEN stack (MongoDB,
 ![Viewing Other Users](Resources/User/ViewingOtherUsers.png)
 ---
 
-#### Pseudo code
+## Pseudo code
 - Create the project repo
 - Create structure files
 - Install and require modules 
@@ -56,7 +56,7 @@ The project is a social media web application built with the MEN stack (MongoDB,
 - Email editing mechanism for the user
 - Create an admin user with the ability to delete posts.
 
-#### Extra features 
+## Extra features 
 - Like mechanism
 - The User can add profile picture
 - The User can create a bio
