@@ -11,7 +11,7 @@
     <h1>CREATE A POST</h1>
     <form action="/<%= id %>/profile" method="POST" class="form-container" enctype="multipart/form-data">
         <label for="image">Image</label>
-        <input type="file" name="image" id="image" accept=".jpeg, .jpg, .png, .gif" required>
+        <input type="file" name="image" id="image" accept="image/*" required>
         
         <label for="description">Description</label>
         <textarea name="description" id="description" required></textarea>
