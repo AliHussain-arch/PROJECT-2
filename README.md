@@ -1,5 +1,10 @@
 The project is a social media web application built with the MEN stack (MongoDB, Express.js, Node.js). Users can create accounts, securely log in, post content including images, and manage their profiles and posts.
 
+## List of technologies
+- MongoDB
+- Express.js
+- Node.js
+
 ## User Story
 - The user must be able to create an account.
 - The user must be able to sign in into his account.
